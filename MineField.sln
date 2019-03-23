@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineField", "MineField\MineField.csproj", "{960A5884-17B4-4EB7-8EF4-3226892B3EC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MineFieldTests", "MineFieldTests\MineFieldTests.csproj", "{30BF0723-F905-4EBB-9BF8-B01136B49D43}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{960A5884-17B4-4EB7-8EF4-3226892B3EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{960A5884-17B4-4EB7-8EF4-3226892B3EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{960A5884-17B4-4EB7-8EF4-3226892B3EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{960A5884-17B4-4EB7-8EF4-3226892B3EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30BF0723-F905-4EBB-9BF8-B01136B49D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30BF0723-F905-4EBB-9BF8-B01136B49D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30BF0723-F905-4EBB-9BF8-B01136B49D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30BF0723-F905-4EBB-9BF8-B01136B49D43}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

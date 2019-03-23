@@ -1,0 +1,8 @@
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\bin\Debug\MineField.exe.config
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\bin\Debug\MineField.exe
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\bin\Debug\MineField.pdb
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\obj\Debug\MineField.csprojResolveAssemblyReference.cache
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\obj\Debug\MineField.exe
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\obj\Debug\MineField.pdb
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\obj\Debug\Interop.WMPLib.dll
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineField\obj\Debug\MineField.csproj.ResolveComReference.cache

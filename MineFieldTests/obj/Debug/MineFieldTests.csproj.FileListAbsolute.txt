@@ -1,0 +1,8 @@
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\bin\Debug\MineFieldTests.dll
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\bin\Debug\MineFieldTests.pdb
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\bin\Debug\MineField.exe
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\bin\Debug\MineField.pdb
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\obj\Debug\MineFieldTests.csprojResolveAssemblyReference.cache
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\obj\Debug\MineFieldTests.dll
+c:\users\rob\documents\visual studio 2015\Projects\MineField\MineFieldTests\obj\Debug\MineFieldTests.pdb
