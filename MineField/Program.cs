@@ -20,41 +20,38 @@ namespace MineField
 
     class Program
     {
-        const int GRID_WIDTH = 8;
-        const int GRID_HEIGHT = 8;
+        // Keep count of the number of moves taken
+        static int moves;
 
-        const int INTERNAL_SQUARE_WIDTH = 7;
-        const int INTERNAL_SQUARE_HEIGHT = 3;
+        // Allow user input - not sure if this is the best way to do this in C#...
+        static bool allow_user_input = false;
 
-        const int WINDOW_WIDTH = 160;
-        const int WINDOW_HEIGHT = 50;
+        // Will represent our hero that's moving around :P/>
+        static Hero hero { get; set; }
 
-        const int PADDING_X = 10;
-        const int PADDING_Y = 5;
+        // Handles drawing the U (Grid, lives, rules, etc)
+        static ScreenManager manager { get; set; }
 
-        const int NUMBER_OF_MINES = 10;
-        const int MINE_PREVIEW_SECONDS = 1;
-
-        const int START_X = (WINDOW_WIDTH / 2) - (((GRID_WIDTH * (INTERNAL_SQUARE_WIDTH + 1)) + 1) / 2);
-        const int START_Y = 7;
-
-        public static int moves;
-
-        public static Hero hero { get; set; } //Will represent our hero that's moving around :P/>
-        public static Game game { get; set; }
-        public static List<Mine> mines { get;  set;}
+        // A list of the current mines
+        static List<Mine> mines { get;  set;}
 
         static SoundPlayer music = new SoundPlayer("music");
 
         static void Main(string[] args)
         {
-            Console.SetWindowSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-            mines = new List<Mine>();
+            // Set the window size to show the entire grid + rules etc
+            Console.SetWindowSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
-           // PlayMusic();
 
+            if (Constants.PLAY_MUSIC)
+                PlayMusic();
+
+
+            // Init the game and draw the assets
             InitGame();
 
+
+            // Detect key presses
             ConsoleKeyInfo keyInfo;
             while ((keyInfo = Console.ReadKey(true)).Key != ConsoleKey.Escape)
             {
@@ -63,19 +60,23 @@ namespace MineField
 
                     // Height and Width need '+1' to include the border 
                     case ConsoleKey.UpArrow:
-                        MoveHero(0, -INTERNAL_SQUARE_HEIGHT - 1);
+                        if (allow_user_input)
+                            MoveHero(0, -Constants.INTERNAL_SQUARE_HEIGHT - 1);
                         break;
 
                     case ConsoleKey.RightArrow:
-                        MoveHero(INTERNAL_SQUARE_WIDTH + 1, 0);
+                        if (allow_user_input)
+                            MoveHero(Constants.INTERNAL_SQUARE_WIDTH + 1, 0);
                         break;
 
                     case ConsoleKey.DownArrow:
-                        MoveHero(0, INTERNAL_SQUARE_HEIGHT + 1);
+                        if (allow_user_input)
+                            MoveHero(0, Constants.INTERNAL_SQUARE_HEIGHT + 1);
                         break;
 
                     case ConsoleKey.LeftArrow:
-                        MoveHero(-INTERNAL_SQUARE_WIDTH - 1, 0);
+                        if (allow_user_input)
+                            MoveHero(-Constants.INTERNAL_SQUARE_WIDTH - 1, 0);
                         break;
 
                     case ConsoleKey.Enter:
@@ -85,12 +86,14 @@ namespace MineField
             }
         }
 
-        /// <summary>
-        /// Paint the new hero
-        /// </summary>
+        //-----------------------------------
+        // Hero Moving
+
+
+        // Move the Hero and update the UI
         static void MoveHero(int x, int y)
         {
-            Hero newHero = new Hero();
+            Hero newHero = new Hero(hero.lives);
             Coordinate newLocation = new Coordinate()
             {
                 X = hero.location.X + x,
@@ -101,28 +104,32 @@ namespace MineField
 
             if (CanMove(newHero.location))
             {
-                hero.RemoveHero();
+                if (x == 0 && y == 0)
+                {
+                    
+                } else
+                {
+                    hero.RemoveHero();
+                }
                 newHero.Move();
                 hero = newHero;
             }
-
-
         }
 
 
         /// <summary>
-        /// Make sure that the new coordinate is not placed outside the
-        /// console window (since that will cause a runtime crash
+        /// Make sure that the new coordinate is not outside the grid
+        /// Detect Mine collitions and handle life loss
         /// </summary>
         static bool CanMove(Coordinate c)
         {
             moves += 1;
-            game.UpdateMoves(moves);
+            manager.UpdateMoves(moves);
 
-            if (c.X < START_X || c.X >= START_X + (GRID_WIDTH * (INTERNAL_SQUARE_WIDTH + 1)))
+            if (c.X < Constants.START_X || c.X >= Constants.START_X + (Constants.GRID_WIDTH * (Constants.INTERNAL_SQUARE_WIDTH + 1)))
                 return false;
 
-            if (c.Y < START_Y || c.Y >= START_Y + (GRID_HEIGHT * (INTERNAL_SQUARE_HEIGHT + 1)))
+            if (c.Y < Constants.START_Y || c.Y >= Constants.START_Y + (Constants.GRID_HEIGHT * (Constants.INTERNAL_SQUARE_HEIGHT + 1)))
                 return false;
 
             foreach (Mine mine in mines)
@@ -132,16 +139,17 @@ namespace MineField
                     if (!hero.TakeLife())
                     {
                         LoseGame();
+                        return false;
                     }
-                    game.UpdateLives(hero.lives);
+                    manager.UpdateLives(hero.lives);
                     mine.Explode();
                     return false;
                 }
             }
 
 
-            if (c.X > START_X + ((GRID_WIDTH -1) * (INTERNAL_SQUARE_WIDTH + 1)) &&
-                c.Y > START_Y + ((GRID_HEIGHT -1) * (INTERNAL_SQUARE_HEIGHT + 1)))
+            if (c.X > Constants.START_X + ((Constants.GRID_WIDTH -1) * (Constants.INTERNAL_SQUARE_WIDTH + 1)) &&
+                c.Y > Constants.START_Y + ((Constants.GRID_HEIGHT -1) * (Constants.INTERNAL_SQUARE_HEIGHT + 1)))
             {
                 WinGame();
                 return false;
@@ -150,121 +158,101 @@ namespace MineField
                 return true;
         }
 
+        //-----------------------------------
+        // Game 
+
+
         static void Reset()
         {
+            allow_user_input = false;
             InitGame();
         }
 
+
         static void WinGame()
         {
+            allow_user_input = false;
             Console.Clear();
-            game.YouWin(moves);
+            manager.YouWin(moves);
         }
+
 
         static void LoseGame()
         {
+            allow_user_input = false;
             Console.Clear();
-            game.GameOver();
+            manager.GameOver();
         }
 
-        /// <summary>
-        /// Paint a background color
-        /// </summary>
-        /// <remarks>
-        /// It is very important that you run the Clear() method after
-        /// changing the background color since this causes a repaint of the background
-        /// </remarks>
+        // Paint a background color
         static void SetBackgroundColor()
         {
             Console.BackgroundColor = Constants.BACKGROUND_COLOR;
             Console.Clear(); //Important!
         }
 
-        /// <summary>
-        /// Initiates the game by painting the background
-        /// and initiating the hero
-        /// </summary>
+
         static void InitGame()
         {
+            // Paint the background color
             SetBackgroundColor();
-            CreateGrid();
 
-            hero = new Hero();
+            // Reset the number of moves
+            moves = 0;
 
-            Coordinate location = new Coordinate()
+            // Create a new hero
+            hero = new Hero(Constants.NUMBER_OF_LIVES);
+
+            // Draw the UI assets
+            DrawAssets();
+
+            // Position hero on 1st square
+            hero.location = new Coordinate()
             {
-                X = START_X + 7,
-                Y = START_Y + 2
+                X = Constants.START_X + 7,
+                Y = Constants.START_Y + 2
             };
 
-            hero.location = location;
+            // Init the mines array
+            mines = new List<Mine>();
+            GenerateMines();
 
-            DrawTitle();
-
+            // Draw the hero
             MoveHero(0, 0);
-            moves = 0;
-            
-            mines = GenerateMines();
-            PreviewMines();
-
         }
 
-        static void DrawTitle()
+
+        static void DrawAssets()
         {
-            game = new Game();
-            game.Draw();
+            manager = new ScreenManager();
+            manager.DrawAssets();
+            manager.DrawGrid(Constants.GRID_WIDTH, Constants.GRID_HEIGHT);
 
-            game.UpdateLives(hero.lives);
-            game.UpdateMoves(moves);
+            manager.UpdateLives(hero.lives);
+            manager.UpdateMoves(moves);
         }
 
-        static void CreateGrid()
-        {
-
-            Coordinate location = new Coordinate();
-
-            location.X = PADDING_X;
-            location.Y = PADDING_Y;
-
-            Grid grid = new Grid(GRID_WIDTH, GRID_HEIGHT, Constants.HERO_COLOR);
-
-            grid.Draw();
-        }
 
         // Generate an array of random coordinates
-        static List<Mine> GenerateMines()
+        static void GenerateMines()
         {
-            List<Mine> mines = new List<Mine>();
             Random rnd = new Random();
-            for (int i = 0; i < NUMBER_OF_MINES; i++)
+            for (int i = 0; i < Constants.NUMBER_OF_MINES; i++)
             {
-                Mine mine = new Mine(START_X-1, START_Y-2, INTERNAL_SQUARE_WIDTH, INTERNAL_SQUARE_HEIGHT, GRID_WIDTH, GRID_HEIGHT, rnd);
-                // Check it doesn't exist already
-                int milliseconds = 10;
-                Thread.Sleep(milliseconds);
-
+                Mine mine = new Mine(Constants.START_X -1, Constants.START_Y -2, rnd);
                 mines.Add(mine);
             }
 
-            return mines;
+            // If there is a mine preview set, then show the mines for a short time
+            PreviewMines();
         }
 
-        static void PlayMusic()
-        {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
-
-            string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
-
-            player.SoundLocation = projectDirectory + "\\music.wav";
-            player.Play();
-        }
-
+        // Show the mines for a short time. 
         static void PreviewMines()
         {
-            if (MINE_PREVIEW_SECONDS > 0)
+            if (Constants.MINE_PREVIEW_SECONDS > 0)
             {
-                int delay = MINE_PREVIEW_SECONDS * 1000;
+                int delay = Constants.MINE_PREVIEW_SECONDS * 1000;
                 foreach(Mine mine in mines)
                 {
                     mine.Draw();
@@ -276,6 +264,25 @@ namespace MineField
                     mine.Remove();
                 }
 
+                allow_user_input = true;
+            } else
+            {
+                allow_user_input = true;
+            }
+        }
+
+        // What's an ASCII based Retro game without music?!
+        static void PlayMusic()
+        {
+            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
+
+            string workingDirectory = Environment.CurrentDirectory;
+            string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
+            string path = projectDirectory + "\\music.wav";
+
+            if (File.Exists(path))
+            {
+                player.Play();
             }
         }
     }

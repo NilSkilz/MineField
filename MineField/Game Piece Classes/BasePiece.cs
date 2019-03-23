@@ -9,5 +9,7 @@ namespace MineField
     public class BasePiece
     {
         public Coordinate location;
+        public ConsoleColor color;
+        public ConsoleColor background_color;
     }
 }

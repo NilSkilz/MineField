@@ -8,23 +8,24 @@ namespace MineField.Game_Piece_Classes
 {
     public class Hero : BasePiece
     {
-        public const ConsoleColor colour = Constants.HERO_COLOR;
         public int lives;
 
-        public Hero()
+        public Hero(int number_of_lives)
         {
             this.location = new Coordinate()
             {
                 X = 14,
                 Y = 4
             };
-            lives = 3;
+            lives = number_of_lives;
+            color = ConsoleColor.White;
+            background_color = ConsoleColor.Black;
         }
 
         public void RemoveHero()
         {
             Console.ForegroundColor = Constants.PATH_COLOR;
-            Console.BackgroundColor = Constants.BACKGROUND_COLOR;
+            Console.BackgroundColor = background_color;
             Console.SetCursorPosition(location.X - 3, location.Y - 1);
             Console.Write("/ / / /\n");
             Console.SetCursorPosition(location.X - 3, location.Y);
@@ -35,20 +36,24 @@ namespace MineField.Game_Piece_Classes
 
         public void Move()
         {
-            Console.ForegroundColor = Constants.HERO_COLOR;
+            Console.ForegroundColor = color;
             Console.CursorVisible = false;
-            Console.SetCursorPosition(location.X, location.Y);
-            Console.Write("O");
+            Console.SetCursorPosition(location.X -1, location.Y -1);
+            Console.Write(" O ");
+            Console.SetCursorPosition(location.X -1, location.Y);
+            Console.Write("/|\\");
+            Console.SetCursorPosition(location.X -1, location.Y +1);
+            Console.Write("/ \\");
         }
 
         public bool TakeLife()
         {
-           if (lives == 1)
+            lives--;
+            if (lives == 0)
             {
                 // Game Over
                 return false;
             }
-            lives --;
             return true;
         }
     }

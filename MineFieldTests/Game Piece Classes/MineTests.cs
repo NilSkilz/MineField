@@ -14,11 +14,19 @@ namespace MineField.Game_Piece_Classes.Tests
         [TestMethod()]
         public void GenerateRandomCoordinateTest()
         {
-            Mine mine = new Mine(0, 0, 1, 1, 8, 8, new Random());
-
-            if (mine.location.X < 2 && mine.location.Y < 2)
+            for (int i = 0; i < 100; i++)
             {
-                Assert.Fail();
+                Mine mine = new Mine(0, 0, new Random());
+
+                if (mine.location.X < 2 && mine.location.Y < 2)
+                {
+                    Assert.Fail();
+                }
+
+                if (mine.location.X > 6 && mine.location.Y > 6)
+                {
+                    Assert.Fail();
+                }
             }
 
         }
