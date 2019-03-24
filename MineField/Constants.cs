@@ -10,9 +10,8 @@ namespace MineField
     // i.e. colors/fonts/etc
     static class Constants
     {
-        public const int NUMBER_OF_MINES = 10;
-        public const int MINE_PREVIEW_SECONDS = 3;
-        public const bool PLAY_MUSIC = false;
+        public const int NUMBER_OF_MINES = 15;
+        public const int MINE_PREVIEW_SECONDS = 2;
         public const int NUMBER_OF_LIVES = 3;
 
         // App Colours  
@@ -26,6 +25,7 @@ namespace MineField
         public const int WINDOW_HEIGHT = 50;
 
         // The number of internal character spaces in a grid square
+        // Only odd numbers will work (due to ASCII art)
         public const int INTERNAL_SQUARE_WIDTH = 7;
         public const int INTERNAL_SQUARE_HEIGHT = 3;
 
