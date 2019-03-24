@@ -26,6 +26,9 @@ namespace MineField
         // Allow user input - not sure if this is the best way to do this in C#...
         static bool allow_user_input = false;
 
+        // Toggle the music
+        static bool play_music = false;
+
         // Will represent our hero that's moving around :P/>
         static Hero hero { get; set; }
 
@@ -35,21 +38,19 @@ namespace MineField
         // A list of the current mines
         static List<Mine> mines { get;  set;}
 
-        static SoundPlayer music = new SoundPlayer("music");
+        static SoundPlayer player;
 
         static void Main(string[] args)
         {
             // Set the window size to show the entire grid + rules etc
             Console.SetWindowSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
 
-
-            if (Constants.PLAY_MUSIC)
-                PlayMusic();
-
-
+            
             // Init the game and draw the assets
             InitGame();
 
+            // Start the music!!!!
+            PlayMusic();
 
             // Detect key presses
             ConsoleKeyInfo keyInfo;
@@ -81,6 +82,10 @@ namespace MineField
 
                     case ConsoleKey.Enter:
                         Reset();
+                        break;
+
+                    case ConsoleKey.Spacebar:
+                        ToggleMusic();
                         break;
                 }
             }
@@ -119,7 +124,7 @@ namespace MineField
 
         /// <summary>
         /// Make sure that the new coordinate is not outside the grid
-        /// Detect Mine collitions and handle life loss
+        /// Detect Mine collisions
         /// </summary>
         static bool CanMove(Coordinate c)
         {
@@ -134,7 +139,7 @@ namespace MineField
 
             foreach (Mine mine in mines)
             {
-                if (mine.location.X == c.X && mine.location.Y == c.Y)
+                if (mine.hasCollided(c))
                 {
                     if (!hero.TakeLife())
                     {
@@ -147,7 +152,8 @@ namespace MineField
                 }
             }
 
-
+            // Get bottom right square
+            // Start x/y + number of squares -1 (i.e. 7) * the internal width + border (i.e. 8)
             if (c.X > Constants.START_X + ((Constants.GRID_WIDTH -1) * (Constants.INTERNAL_SQUARE_WIDTH + 1)) &&
                 c.Y > Constants.START_Y + ((Constants.GRID_HEIGHT -1) * (Constants.INTERNAL_SQUARE_HEIGHT + 1)))
             {
@@ -198,7 +204,7 @@ namespace MineField
             SetBackgroundColor();
 
             // Reset the number of moves
-            moves = 0;
+            moves = -1;
 
             // Create a new hero
             hero = new Hero(Constants.NUMBER_OF_LIVES);
@@ -209,8 +215,8 @@ namespace MineField
             // Position hero on 1st square
             hero.location = new Coordinate()
             {
-                X = Constants.START_X + 7,
-                Y = Constants.START_Y + 2
+                X = Constants.START_X + 1 + (int)Math.Floor((Double)Constants.INTERNAL_SQUARE_WIDTH / 2), // Start X plus border plus half square width 
+                Y = Constants.START_Y + 1 + (int)Math.Floor((Double)Constants.INTERNAL_SQUARE_HEIGHT / 2)  // Start Y plus border plus 
             };
 
             // Init the mines array
@@ -239,8 +245,26 @@ namespace MineField
             Random rnd = new Random();
             for (int i = 0; i < Constants.NUMBER_OF_MINES; i++)
             {
-                Mine mine = new Mine(Constants.START_X -1, Constants.START_Y -2, rnd);
-                mines.Add(mine);
+                Mine mine = new Mine(rnd);
+
+                // Check if one exists
+                bool exists = false;
+                foreach(Mine m in mines)
+                {
+                    if (m.location.X == mine.location.X && m.location.Y == mine.location.Y)
+                    {
+                        // Try again
+                        exists = true;
+                    }
+                }
+
+                if (!exists)
+                {
+                    mines.Add(mine);
+                } else
+                {
+                    i--;
+                }
             }
 
             // If there is a mine preview set, then show the mines for a short time
@@ -271,18 +295,35 @@ namespace MineField
             }
         }
 
+        static void ToggleMusic()
+        {
+            play_music = !play_music;
+            PlayMusic();
+        }
+
         // What's an ASCII based Retro game without music?!
         static void PlayMusic()
         {
-            System.Media.SoundPlayer player = new System.Media.SoundPlayer();
-
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
             string path = projectDirectory + "\\music.wav";
 
-            if (File.Exists(path))
+            if (!File.Exists(path))
+            {
+                return;
+            }
+
+            if (player == null)
+            {
+                player = new System.Media.SoundPlayer(path);
+            }
+
+            if (play_music)
             {
                 player.Play();
+            } else
+            {
+                player.Stop();
             }
         }
     }
