@@ -8,12 +8,10 @@ namespace MineField
 {
     class ScreenManager
     {
-        const int SQUARE_WIDTH = 7;
-        const int SQUARE_HEIGHT = 3;
 
         public void DrawAssets()
         {
-            int left_position = (Console.WindowWidth / 2) - 15;
+            int left_position = (Console.WindowWidth / 2) - 18;
 
             Console.ForegroundColor = Constants.HERO_COLOR;
             Console.CursorTop = 2;
@@ -28,14 +26,19 @@ namespace MineField
 
 
             Console.CursorTop = 42;
-            Console.WriteLine("     Rules: Move your hero using the cursor to get to the treasure, but avoid the mines!");
-            Console.WriteLine("            Press ENTER to reset the game or ESC to quit");
-            
+            Console.WriteLine("     Move your hero using the cursor to get to the treasure, but avoid the mines!");
+            Console.WriteLine("     Press ENTER to reset the game or ESC to quit");
+            Console.WriteLine("     Press SPACE to toggle the music");
+
             Console.ResetColor();
         }
 
         public void UpdateLives(int lives)
         {
+            if (lives < 0)
+            {
+                return;
+            }
             Console.ForegroundColor = Constants.HERO_COLOR;
             Console.BackgroundColor = Constants.BACKGROUND_COLOR;
             Console.CursorTop = 20;
@@ -45,6 +48,10 @@ namespace MineField
 
         public void UpdateMoves(int moves)
         {
+            if (moves < 0)
+            {
+                return;
+            }
             Console.ForegroundColor = Constants.HERO_COLOR;
             Console.BackgroundColor = Constants.BACKGROUND_COLOR;
             Console.CursorTop = 22;
@@ -118,11 +125,9 @@ namespace MineField
         public void DrawGrid(int horizontal_squares, int vertical_squares)
         {
 
-            int grid_width = (SQUARE_WIDTH * horizontal_squares) + 1;
-            int centre_x = Console.WindowWidth / 2;
             Coordinate hLocation = new Coordinate();
-            hLocation.Y = 7;
-            hLocation.X = centre_x - ((grid_width / 2) + 1);
+            hLocation.Y = Constants.START_Y;
+            hLocation.X = Constants.START_X;
         
         // TODO: This could be generated with code, to enable dynamic numbers of rows/columns. However the spec
         // did not include this feature.
@@ -188,11 +193,11 @@ namespace MineField
             Console.CursorLeft = hLocation.X;
             Console.Write("├───────┼───────┼───────┼───────┼───────┼───────┼───────┼───────┤\n");
             Console.CursorLeft = hLocation.X;
-            Console.Write("│       │       │       │       │       │       │       │       │\n");
+            Console.Write("│       │       │       │       │       │       │       │  \\ /  │\n");
             Console.CursorLeft = hLocation.X;
-            Console.Write("│       │       │       │       │       │       │       │  ┌┴┐  │\n");
+            Console.Write("│       │       │       │       │       │       │       │   x   │\n");
             Console.CursorLeft = hLocation.X;
-            Console.Write("│       │       │       │       │       │       │       │  └─┘  │\n");
+            Console.Write("│       │       │       │       │       │       │       │  / \\  │\n");
             Console.CursorLeft = hLocation.X;
             Console.Write("└───────┴───────┴───────┴───────┴───────┴───────┴───────┴───────┘\n");
             Console.ResetColor();

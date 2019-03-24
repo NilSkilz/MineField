@@ -12,11 +12,6 @@ namespace MineField.Game_Piece_Classes
 
         public Hero(int number_of_lives)
         {
-            this.location = new Coordinate()
-            {
-                X = 14,
-                Y = 4
-            };
             lives = number_of_lives;
             color = ConsoleColor.White;
             background_color = ConsoleColor.Black;
